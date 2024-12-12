@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Recorder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #dcacac;
+            text-align: center;
+        }
+        video {
+            width: 60%;
+            margin: 20px auto;
+            border: 2px solid #ddd;
+            background: black;
+            display: none;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            margin: 5px;
+            border-radius: 20px;
+        }
+        #audioPreview,
+        .final-preview {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Interview Recorder</h1>
+    <div id="questionText">Click "Next Question" to begin.</div>
+    <video id="videoPreview" autoplay muted></video>
+    <div>
+        <button id="startBtn" disabled>Start Recording</button>
+        <button id="stopBtn" disabled>Stop Recording</button>
+        <button id="nextBtn">Next Question</button>
+    </div>
+    <audio id="audioPreview" controls style="display:none;"></audio>
+    <div id="finalPreview" style="display:none;">
+        <h2>Preview of All Recordings</h2>
+        <div id="recordingsList"></div>
+    </div>
+
+    <script>
+        const questions = [
+            "Tell us about yourself.",
+            "What are your strengths and weaknesses?",
+            "Why do you want this job?",
+            "Where do you see yourself in 5 years?",
+            "What makes you a good fit for this role?"
+        ];
+
+        const questionText = document.getElementById("questionText");
+        const video = document.getElementById("videoPreview");
+        const startBtn = document.getElementById("startBtn");
+        const stopBtn = document.getElementById("stopBtn");
+        const nextBtn = document.getElementById("nextBtn");
+        const audioPreview = document.getElementById("audioPreview");
+        const finalPreview = document.getElementById("finalPreview");
+        const recordingsList = document.getElementById("recordingsList");
+
+        let currentQuestionIndex = -1;
+        let mediaRecorder, chunks = [];
+        let stream;
+        const recordings = [];
+
+        async function startCamera() {
+            stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+            video.srcObject = stream;
+            video.style.display = "block";
+        }
+
+        function stopCamera() {
+            if (stream) {
+                const tracks = stream.getTracks();
+                tracks.forEach(track => track.stop());
+                video.style.display = "none";
+            }
+        }
+
+        nextBtn.addEventListener("click", () => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                questionText.textContent = `Question ${currentQuestionIndex + 1}: ${questions[currentQuestionIndex]}`;
+                startBtn.disabled = false;
+                nextBtn.disabled = true;
+            } else {
+                questionText.textContent = "All questions are completed. Thank you!";
+                startBtn.disabled = true;
+                stopBtn.disabled = true;
+                nextBtn.disabled = true;
+
+                // Show the final preview of all recordings
+                finalPreview.style.display = "block";
+                recordings.forEach((recording, index) => {
+                    const audioElement = document.createElement("audio");
+                    audioElement.src = recording;
+                    audioElement.controls = true;
+                    const label = document.createElement("p");
+                    label.textContent = `Question ${index + 1}: ${questions[index]}`;
+                    recordingsList.appendChild(label);
+                    recordingsList.appendChild(audioElement);
+                });
+            }
+        });
+
+        startBtn.addEventListener("click", async () => {
+            await startCamera();
+
+            mediaRecorder = new MediaRecorder(stream);
+            chunks = [];
+
+            mediaRecorder.ondataavailable = e => chunks.push(e.data);
+            mediaRecorder.onstop = () => {
+                // Create an audio blob with the audio MIME type
+                const audioBlob = new Blob(chunks, { type: "audio/wav" });
+                const formData = new FormData();
+                
+                // Generate a filename with timestamp
+                const timestamp = Date.now();
+                const filename = `question_${currentQuestionIndex + 1}_${timestamp}.wav`;
+                
+                formData.append("audio", audioBlob, filename);
+                formData.append("question", currentQuestionIndex + 1);
+
+                // Upload the audio file to the server
+                fetch("/upload-audio", { method: "POST", body: formData })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data.message);
+                        console.log(`Saved filename: ${data.filename}`);
+                    })
+                    .catch(err => console.error("Upload failed", err));
+
+                // Save the audio URL for preview
+                const audioURL = URL.createObjectURL(audioBlob);
+                recordings.push(audioURL);
+
+                // Show immediate audio preview
+                audioPreview.src = audioURL;
+                audioPreview.style.display = "block";
+            };
+
+            mediaRecorder.start();
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+        });
+
+        stopBtn.addEventListener("click", () => {
+            mediaRecorder.stop();
+            stopCamera();
+            stopBtn.disabled = true;
+            nextBtn.disabled = false;
+        });
+    </script>
+</body>
+</html>
+
+
+

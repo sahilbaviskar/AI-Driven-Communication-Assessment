@@ -1,0 +1,1347 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Advanced Language Concepts Quiz</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+
+        #quiz-container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .question {
+            background-color: #f4f4f4;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .option {
+            background-color: #e9ecef;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .option.correct {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .option.incorrect {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        #difficulty-indicator {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        #score-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+
+        .btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="quiz-container">
+        <h1>Language Mastery Quiz</h1>
+        <div id="difficulty-indicator">Current Difficulty: Easy</div>
+        <div id="question-container"></div>
+        <div id="score-container">
+            <span>Score: <span id="current-score">0</span></span>
+            <span>Difficulty: <span id="current-difficulty">Easy</span></span>
+        </div>
+        <button id="start-btn" class="btn">Start Quiz</button>
+        <button id="next-btn" class="btn" style="display:none;">Next Question</button>
+    </div>
+
+    <script>
+        class LanguageQuizGenerator {
+            constructor() {
+                this.questions = this.generateQuestionBank();
+                this.currentQuestionIndex = 0;
+                this.score = 0;
+                this.difficultyLevels = ['Easy', 'Intermediate', 'Advanced', 'Expert'];
+                this.currentDifficultyIndex = 0;
+                this.consecutiveCorrectAnswers = 0;
+            }
+
+            generateQuestionBank() {
+                return [
+                    // Original Questions (kept for context)
+                    {
+                        question: "Which sentence demonstrates the most appropriate use of reported speech?",
+                        options: [
+                            "She said me that she will come tomorrow.",
+                            "He told that the meeting was cancelled.",
+                            "They said that they would arrive early.",
+                            "I told her to not go there."
+                        ],
+                        correctAnswer: 2,
+                        explanation: "The third option correctly uses reported speech with proper verb tense sequence.",
+                        difficulty: 1
+                    },
+                    {
+                        question: "Which sentence demonstrates correct use of the present perfect tense?",
+                        options: [
+                            "She have been to the mall yesterday.",
+                            "I has finished my homework already.",
+                            "They have visited Paris several times.",
+                            "He have written a letter to his friend."
+                        ],
+                        correctAnswer: 2,
+                        explanation: "The third option correctly uses the present perfect tense to indicate repeated actions in the past.",
+                        difficulty: 1
+                    },
+                    {
+                        question: "Which sentence is an example of a conditional sentence?",
+                        options: [
+                            "I eat breakfast every morning.",
+                            "If it rains, we will cancel the picnic.",
+                            "She loves playing tennis on weekends.",
+                            "I ran as fast as I could."
+                        ],
+                        correctAnswer: 1,
+                        explanation: "The second option correctly demonstrates a first conditional sentence with 'if' and a future consequence.",
+                        difficulty: 1
+                    },
+                    {
+                        question: "Which sentence is written in passive voice?",
+                        options: [
+                            "The cake was baked by Sarah.",
+                            "Sarah baked the cake.",
+                            "The students completed their assignments.",
+                            "He is driving the car."
+                        ],
+                        correctAnswer: 0,
+                        explanation: "The first option is in passive voice, where the action is performed by the subject mentioned at the end.",
+                        difficulty: 1
+                    },
+                    {
+                        question: "Which sentence demonstrates correct subject-verb agreement?",
+                        options: [
+                            "The team are practicing for the match.",
+                            "Each of the students have a unique project.",
+                            "The dogs barks loudly at night.",
+                            "One of the boys is playing outside."
+                        ],
+                        correctAnswer: 3,
+                        explanation: "The fourth option correctly matches the singular subject with a singular verb.",
+                        difficulty: 1
+                    },
+                    {
+                        question: "Which sentence uses the correct form of a modal verb?",
+                        options: [
+                            "You musted complete the form before leaving.",
+                            "They can to speak French fluently.",
+                            "She should finish her homework before dinner.",
+                            "He mayed arrive late tonight."
+                        ],
+                        correctAnswer: 2,
+                        explanation: "The third option uses 'should' properly to indicate advice or suggestion.",
+                        difficulty: 1
+                    },
+                    {
+                        question: "Which sentence correctly uses an adverb of frequency?",
+                        options: [
+                            "She always is on time for her classes.",
+                            "I have rarely been to the theater.",
+                            "They eats dinner usually at 8 PM.",
+                            "We will hardly finish the task tomorrow."
+                        ],
+                        correctAnswer: 1,
+                        explanation: "The second option correctly places the adverb 'rarely' before the verb in present perfect tense.",
+                        difficulty: 1
+                    },
+                    {
+                        question: "Which sentence demonstrates proper use of a comparative adjective?",
+                        options: [
+                            "This is the most beautifuler painting I've seen.",
+                            "She is taller than her brother.",
+                            "He is more smarter than the others.",
+                            "This book is gooder than the last one."
+                        ],
+                        correctAnswer: 1,
+                        explanation: "The second option uses the correct comparative adjective 'taller' with 'than.'",
+                        difficulty: 1
+                    },
+                    {
+                        question: "Which sentence demonstrates appropriate use of conjunctions?",
+                        options: [
+                            "I am tired because I slept late last night.",
+                            "She will go, and if it rains heavily.",
+                            "Although he was sick but he still went to work.",
+                            "Neither she nor her friend are coming."
+                        ],
+                        correctAnswer: 3,
+                        explanation: "The fourth option demonstrates correct use of correlative conjunctions 'neither' and 'nor.'",
+                        difficulty: 1
+                    },
+                    {
+                        question: "Which sentence demonstrates proper use of the future perfect tense?",
+                        options: [
+                            "I will have finished the project by next week.",
+                            "She will finishes her homework before dinner.",
+                            "They will have been arriving late to the party.",
+                            "We will been complete the task by tomorrow."
+                        ],
+                        correctAnswer: 0,
+                        explanation: "The first option correctly uses the future perfect tense to indicate completion of an action by a specific time in the future.",
+                        difficulty: 1
+                    },
+                    {
+                        question: "Which sentence demonstrates the correct use of an indirect question?",
+                        options: [
+                            "Do you know where is she?",
+                            "Can you tell me what time the train leaves?",
+                            "Could you explain where did he go?",
+                            "Do you know what is the answer to this question?"
+                        ],
+                        correctAnswer: 1,
+                        explanation: "The second option correctly uses an indirect question structure with appropriate word order.",
+                        difficulty: 1
+                    },
+
+                    // New Questions
+                    {
+                        question: "Which sentence demonstrates the most precise use of the subjunctive mood?",
+                        options: [
+                            "I suggest that he is careful.",
+                            "I suggest that he be careful.",
+                            "I suggest him to be careful.",
+                            "I suggested that he was careful."
+                        ],
+                        correctAnswer: 1,
+                        explanation: "The second option correctly uses the subjunctive mood to express a recommendation.",
+                        difficulty: 3
+                    },
+                    {
+                        question: "Identify the sentence with the most grammatically correct parallel structure:",
+                        options: [
+                            "She likes swimming, to read, and hiking.",
+                            "She likes to swim, reading, and hike.",
+                            "She likes swimming, reading, and to hike.",
+                            "She likes to swim, to read, and to hike."
+                        ],
+                        correctAnswer: 3,
+                        explanation: "The third option maintains consistent grammatical form in the list.",
+                        difficulty: 2
+                    },
+                    {
+                        question: "Which sentence uses the perfect infinitive most accurately?",
+                        options: [
+                            "He seems to have studied.",
+                            "He seems to have study.",
+                            "He seems to have studying.",
+                            "He seems have studied."
+                        ],
+                        correctAnswer: 0,
+                        explanation: "The first option correctly uses the perfect infinitive to indicate a completed action.",
+                        difficulty: 3
+                    },
+                    {
+                        question: "Select the sentence with the most sophisticated use of the passive voice:",
+                        options: [
+                            "The book was read by her.",
+                            "Her the book was read.",
+                            "The book read by her.",
+                            "By her the book was read."
+                        ],
+                        correctAnswer: 0,
+                        explanation: "The first option correctly uses the passive voice with proper sentence structure.",
+                        difficulty: 2
+                    },
+                    {
+                        question: "Identify the sentence with the most precise use of the future perfect continuous tense:",
+                        options: [
+                            "By next year, I will have been working here for five years.",
+                            "By next year, I will be working here for five years.",
+                            "By next year, I will have working here for five years.",
+                            "By next year, I will work here for five years."
+                        ],
+                        correctAnswer: 0,
+                        explanation: "The first option correctly uses the future perfect continuous tense.",
+                        difficulty: 3
+                    },
+                    {
+                        question: "Choose the sentence with the most appropriate mixed conditional structure:",
+                        options: [
+                            "If I would have known, I would come.",
+                            "If I had known, I would have come.",
+                            "If I know, I would come.",
+                            "If I knew, I come."
+                        ],
+                        correctAnswer: 1,
+                        explanation: "The second option correctly uses a mixed conditional structure.",
+                        difficulty: 3
+                    },
+                    {
+                        question: "Which sentence demonstrates the most precise use of the modal perfect?",
+                        options: [
+                            "She must have gone to the store.",
+                            "She must go to the store.",
+                            "She must be going to the store.",
+                            "She must of gone to the store."
+                        ],
+                        correctAnswer: 0,
+                        explanation: "The first option correctly uses the modal perfect to express a past probability.",
+                        difficulty: 2
+                    },
+                    {
+                        question: "Select the sentence with the most sophisticated cleft construction:",
+                        options: [
+                            "It was him who solved the problem.",
+                            "It was he who solved the problem.",
+                            "He was who solved the problem.",
+                            "It is him who solving the problem."
+                        ],
+                        correctAnswer: 1,
+                        explanation: "The second option uses the correct pronoun and cleft structure.",
+                        difficulty: 3
+                    },
+                    {
+                        question: "Identify the sentence with the most precise inversion in a complex conditional:",
+                        options: [
+                            "Had I known the truth, I would have acted differently.",
+                            "If I had known the truth, I would have acted differently.",
+                            "Known I the truth, I would have acted differently.",
+                            "I had known the truth, I would have acted differently."
+                        ],
+                        correctAnswer: 0,
+                        explanation: "The first option uses perfect inversion in a hypothetical condition.",
+                        difficulty: 3
+                    },
+                    {
+                        question: "Choose the sentence with the most appropriate use of the causative have:",
+                        options: [
+                            "I had my car to be repaired.",
+                            "I have my car repaired.",
+                            "I had my car be repaired.",
+                            "I have my car to repair."
+                        ],
+                        correctAnswer: 1,
+                        explanation: "The second option correctly uses the causative have structure.",
+                        difficulty: 2
+                    },
+                    {
+                        question: "Which sentence demonstrates the most precise use of reduced relative clauses?",
+                        options: [
+                            "The man sitting in the corner is my uncle.",
+                            "The man who is sitting in the corner is my uncle.",
+                            "The man he is sitting in the corner is my uncle.",
+                            "The man to sit in the corner is my uncle."
+                        ],
+                        correctAnswer: 0,
+                        explanation: "The first option correctly uses a reduced relative clause.",
+                        difficulty: 2
+                    },
+                    {
+                        question: "Identify the sentence with the most sophisticated use of the present perfect subjunctive:",
+                        options: [
+                            "I wish he would have studied.",
+                            "I wish he had studied.",
+                            "I wish he will have studied.",
+                            "I wish he has studied."
+                        ],
+                        correctAnswer: 1,
+                        explanation: "The second option correctly uses the past perfect for hypothetical situations.",
+                        difficulty: 3
+                    },
+                    {
+                        question: "Select the sentence with the most precise gerund usage:",
+                        options: [
+                            "I appreciate you to help me.",
+                            "I appreciate you helping me.",
+                            "I appreciate you help me.",
+                            "I appreciate you helped me."
+                        ],
+                        correctAnswer: 1,
+                        explanation: "The second option correctly uses a gerund after 'appreciate'.",
+                        difficulty: 2
+                    },
+                    {
+                        question: "Choose the sentence with the most grammatically sophisticated use of ellipsis:",
+                        options: [
+                            "She speaks French better than I do.",
+                            "She speaks French better than me.",
+                            "She speaks French better than I.",
+                            "She speaks French better than myself."
+                        ],
+                        correctAnswer: 0,
+                        explanation: "The first option correctly uses elliptical comparison with the full verb.",
+                        difficulty: 3
+                    },
+                    {
+                        question: "Identify the sentence with the most precise use of the third conditional:",
+                        options: [
+                            "If I would have known, I had come.",
+                            "If I had known, I would have come.",
+                            "If I know, I would come.",
+                            "If I knew, I come."
+                        ],
+                        correctAnswer: 1,
+                        explanation: "The second option correctly uses the third conditional structure.",
+                        difficulty: 3
+                    },
+                    {
+                        question: "Which sentence demonstrates the most sophisticated use of a participle phrase:",
+                        options: [
+                            "Walking into the room, the light was turned on.",
+                            "Walking into the room, I turned on the light.",
+                            "I walking into the room, the light was turned on.",
+                            "Walking the room, I turned on the light."
+                        ],
+                        correctAnswer: 1,
+                        explanation: "The second option correctly uses a participial phrase with the appropriate subject.",
+                        difficulty: 2
+                    },
+                    {
+                        question: "Select the sentence with the most appropriate use of the dummy subject:",
+                        options: [
+                            "It seems that he is coming.",
+                            "Seems that he is coming.",
+                            "He seems coming.",
+                            "He is seems to coming."
+                        ],
+                        correctAnswer: 0,
+                        explanation: "The first option correctly uses the dummy subject 'it'.",
+                        difficulty: 1
+                    },
+                    {
+                        question: "Choose the sentence with the most precise use of inversed question formation:",
+                        options: [
+                            "Never have I seen such a beautiful sunset.",
+                            "Never I have seen such a beautiful sunset.",
+                            "I have never seen such a beautiful sunset.",
+                            "Have never I seen such a beautiful sunset."
+                        ],
+                        correctAnswer: 0,
+                        explanation: "The first option uses correct inversion for an emphatic negative statement.",
+                        difficulty: 3
+                    },
+                    {
+                        question: "Identify the sentence with the most sophisticated use of a non-defining relative clause:",
+                        options: [
+                            "My brother, who is a doctor, lives in New York.",
+                            "My brother who is a doctor lives in New York.",
+                            "My brother, that is a doctor, lives in New York.",
+                            "My brother which is a doctor, lives in New York."
+                        ],
+                        correctAnswer: 0,
+                        explanation: "The first option correctly uses commas with a non-defining relative clause.",
+                        difficulty: 2
+                    },
+                    {
+                        question: "Which sentence demonstrates the most precise use of the past modal of speculation:",
+                        options: [
+                            "He must have been working late.",
+                            "He must be working late.",
+                            "He must of been working late.",
+                            "He must working late."
+                        ],
+                        correctAnswer: 0,
+                        explanation: "The first option correctly uses the past modal to speculate about a past action.",
+                        difficulty: 2
+                    },
+                    {
+                        question: "Select the sentence with the most grammatically sophisticated parallel comparison:",
+                        options: [
+                            "She is as intelligent as, if not more intelligent than, her brother.",
+                            "She is as intelligent as her brother, if not more.",
+                            "She is intelligent as her brother, if not more.",
+                            "She is as intelligent than her brother."
+                        ],
+                        correctAnswer: 0,
+                        explanation: "The first option uses a sophisticated parallel comparison structure.",
+                        difficulty: 3
+                    },
+                    {
+                        question: "Choose the sentence with the most precise use of the mixed metaphor:",
+                        options: [
+                            "He is sailing through the stormy waters of his career.",
+                            "He is walking through the stormy waters of his career.",
+                            "He is flying through the stormy waters of his career.",
+                            "He is swimming through the stormy waters of his career."
+                        ],
+                        correctAnswer: 0,
+                        explanation: "The first option uses a consistent nautical metaphor.",
+                        difficulty: 2
+                    },
+                    {
+                        question: "Identify the sentence with the most sophisticated use of the anticipatory 'it':",
+                        options: [
+                            "It is important that he comes to the meeting.",
+                            "It is important he comes to the meeting.",
+                            "Is important that he comes to the meeting.",
+                            "It important that he comes to the meeting."
+                        ],
+                        correctAnswer: 0,
+                        explanation: "The first option correctly uses the anticipatory 'it' construction.",
+                        difficulty: 2
+                    }
+                ];
+            }
+
+            getFilteredQuestions() {
+                return this.questions.filter(q =>
+                    q.difficulty <= this.currentDifficultyIndex + 1
+                );
+            }
+
+            getCurrentQuestion() {
+                const filteredQuestions = this.getFilteredQuestions();
+                return filteredQuestions[this.currentQuestionIndex % filteredQuestions.length];
+            }
+
+            checkAnswer(selectedIndex) {
+                const currentQuestion = this.getCurrentQuestion();
+                const isCorrect = selectedIndex === currentQuestion.correctAnswer;
+
+                if (isCorrect) {
+                    this.consecutiveCorrectAnswers++;
+                    this.score += 10;
+
+                    // Increase difficulty after 2 consecutive correct answers
+                    if (this.consecutiveCorrectAnswers === 2 &&
+                        this.currentDifficultyIndex < this.difficultyLevels.length - 1) {
+                        this.currentDifficultyIndex++;
+                        this.consecutiveCorrectAnswers = 0;
+                    }
+                } else {
+                    this.consecutiveCorrectAnswers = 0;
+
+                    // Decrease difficulty if 2 consecutive incorrect answers
+                    if (this.currentDifficultyIndex > 0) {
+                        this.currentDifficultyIndex--;
+                    }
+                }
+
+                return {
+                    isCorrect,
+                    explanation: currentQuestion.explanation
+                };
+            }
+
+            nextQuestion() {
+                this.currentQuestionIndex++;
+            }
+        }
+
+        class QuizUI {
+            constructor(quizGenerator) {
+                this.quizGenerator = quizGenerator;
+                this.questionContainer = document.getElementById('question-container');
+                this.scoreElement = document.getElementById('current-score');
+                this.difficultyElement = document.getElementById('current-difficulty');
+                this.startBtn = document.getElementById('start-btn');
+                this.nextBtn = document.getElementById('next-btn');
+                this.setupEventListeners();
+            }
+
+            setupEventListeners() {
+                this.startBtn.addEventListener('click', () => this.startQuiz());
+                this.nextBtn.addEventListener('click', () => this.displayNextQuestion());
+            }
+
+            startQuiz() {
+                this.startBtn.style.display = 'none';
+                this.nextBtn.style.display = 'inline-block';
+                this.displayQuestion();
+            }
+
+            displayQuestion() {
+                const question = this.quizGenerator.getCurrentQuestion();
+                this.questionContainer.innerHTML = `
+                    <div class="question">
+                        <h3>${question.question}</h3>
+                        ${question.options.map((option, index) => `
+                            <div class="option" data-index="${index}">${option}</div>
+                        `).join('')}
+                    </div>
+                `;
+
+                // Add click listeners to options
+                document.querySelectorAll('.option').forEach(option => {
+                    option.addEventListener('click', (e) => this.handleOptionClick(e));
+                });
+
+                // Update difficulty indicator
+                this.difficultyElement.textContent =
+                    this.quizGenerator.difficultyLevels[this.quizGenerator.currentDifficultyIndex];
+            }
+
+            handleOptionClick(e) {
+                const selectedIndex = parseInt(e.target.getAttribute('data-index'));
+                const result = this.quizGenerator.checkAnswer(selectedIndex);
+
+                // Highlight correct/incorrect answers
+                document.querySelectorAll('.option').forEach((option, index) => {
+                    option.classList.remove('correct', 'incorrect');
+                    if (index === this.quizGenerator.getCurrentQuestion().correctAnswer) {
+                        option.classList.add('correct');
+                    }
+                    if (index === selectedIndex && !result.isCorrect) {
+                        option.classList.add('incorrect');
+                    }
+                });
+
+                // Disable further clicks
+                document.querySelectorAll('.option').forEach(option => {
+                    option.style.pointerEvents = 'none';
+                });
+
+                // Update score
+                this.scoreElement.textContent = this.quizGenerator.score;
+
+                // Show explanation
+                this.questionContainer.innerHTML += `
+                    <div style="margin-top: 15px; color: ${result.isCorrect ? 'green' : 'red'}">
+                        ${result.explanation}
+                    </div>
+                `;
+            }
+
+            displayNextQuestion() {
+                this.quizGenerator.nextQuestion();
+                this.displayQuestion();
+            }
+        }
+
+        // Initialize and start the quiz
+        const quizGenerator = new LanguageQuizGenerator();
+        const quizUI = new QuizUI(quizGenerator);
+    </script>
+</body>
+
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Advanced Language Concepts Quiz</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #52545b 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+
+        #quiz-container {
+            background-color: #e39a9a;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .question {
+            background-color: #f4f4f4;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .option {
+            background-color: #e9ecef;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .option.correct {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .option.incorrect {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        #difficulty-indicator {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        #score-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+
+        .btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #restart-btn {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="quiz-container">
+        <h1>Language Mastery Quiz</h1>
+        <div id="question-container"></div>
+        <div id="score-container">
+            <span>Score: <span id="current-score">0</span></span>
+            <span>Difficulty: <span id="current-difficulty">Easy</span></span>
+        </div>
+        <button id="start-btn" class="btn">Start Quiz</button>
+        <button id="next-btn" class="btn" style="display:none;">Next Question</button>
+        <button id="restart-btn" class="btn" style="display:none;">Restart Quiz</button>
+    </div>
+
+    <script>
+        class LanguageQuizGenerator {
+            constructor() {
+                this.questions = this.generateQuestionBank();
+                this.currentQuestionIndex = 0;
+                this.score = 0;
+                this.difficultyLevels = ['Easy', 'Intermediate', 'Advanced', 'Expert'];
+                this.currentDifficultyIndex = 0;
+                this.consecutiveCorrectAnswers = 0;
+            }
+
+            generateQuestionBank() {
+                return [
+                    {
+                        question: "Which sentence demonstrates the most appropriate use of reported speech?",
+                        options: [
+                            "She said me that she will come tomorrow.",
+                            "He told that the meeting was cancelled.",
+                            "They said that they would arrive early.",
+                            "I told her to not go there."
+                        ],
+                        correctAnswer: 2,
+                        explanation: "The third option correctly uses reported speech with proper verb tense sequence.",
+                        difficulty: 1
+                    },
+                    // Add more questions here...
+                    {
+                        question: "Which sentence demonstrates the most appropriate use of reported speech?",
+                        options: [
+                            "She said me that she will come tomorrow.",
+                            "He told that the meeting was cancelled.",
+                            "They said that they would arrive early.",
+                            "I told her to not go there."
+                        ],
+                        correctAnswer: 2,
+                        explanation: "The third option correctly uses reported speech with proper verb tense sequence.",
+                        difficulty: 1
+                    },
+                    {
+                        question: "Which sentence demonstrates correct use of the present perfect tense?",
+                        options: [
+                            "She have been to the mall yesterday.",
+                            "I has finished my homework already.",
+                            "They have visited Paris several times.",
+                            "He have written a letter to his friend."
+                        ],
+                        correctAnswer: 2,
+                        explanation: "The third option correctly uses the present perfect tense to indicate repeated actions in the past.",
+                        difficulty: 1
+                    },
+                    {
+                        question: "Which sentence is an example of a conditional sentence?",
+                        options: [
+                            "I eat breakfast every morning.",
+                            "If it rains, we will cancel the picnic.",
+                            "She loves playing tennis on weekends.",
+                            "I ran as fast as I could."
+                        ],
+                        correctAnswer: 1,
+                        explanation: "The second option correctly demonstrates a first conditional sentence with 'if' and a future consequence.",
+                        difficulty: 1
+                    },
+                    {
+                        question: "Which sentence is written in passive voice?",
+                        options: [
+                            "The cake was baked by Sarah.",
+                            "Sarah baked the cake.",
+                            "The students completed their assignments.",
+                            "He is driving the car."
+                        ],
+                        correctAnswer: 0,
+                        explanation: "The first option is in passive voice, where the action is performed by the subject mentioned at the end.",
+                        difficulty: 1
+                    },
+                    {
+                        question: "Which sentence demonstrates correct subject-verb agreement?",
+                        options: [
+                            "The team are practicing for the match.",
+                            "Each of the students have a unique project.",
+                            "The dogs barks loudly at night.",
+                            "One of the boys is playing outside."
+                        ],
+                        correctAnswer: 3,
+                        explanation: "The fourth option correctly matches the singular subject with a singular verb.",
+                        difficulty: 1
+                    },
+                    {
+                        question: "Which sentence uses the correct form of a modal verb?",
+                        options: [
+                            "You musted complete the form before leaving.",
+                            "They can to speak French fluently.",
+                            "She should finish her homework before dinner.",
+                            "He mayed arrive late tonight."
+                        ],
+                        correctAnswer: 2,
+                        explanation: "The third option uses 'should' properly to indicate advice or suggestion.",
+                        difficulty: 1
+                    },
+                    {
+                        question: "Which sentence correctly uses an adverb of frequency?",
+                        options: [
+                            "She always is on time for her classes.",
+                            "I have rarely been to the theater.",
+                            "They eats dinner usually at 8 PM.",
+                            "We will hardly finish the task tomorrow."
+                        ],
+                        correctAnswer: 1,
+                        explanation: "The second option correctly places the adverb 'rarely' before the verb in present perfect tense.",
+                        difficulty: 1
+                    },
+                    {
+                        question: "Which sentence demonstrates proper use of a comparative adjective?",
+                        options: [
+                            "This is the most beautifuler painting I've seen.",
+                            "She is taller than her brother.",
+                            "He is more smarter than the others.",
+                            "This book is gooder than the last one."
+                        ],
+                        correctAnswer: 1,
+                        explanation: "The second option uses the correct comparative adjective 'taller' with 'than.'",
+                        difficulty: 1
+                    },
+                    {
+                        question: "Which sentence demonstrates appropriate use of conjunctions?",
+                        options: [
+                            "I am tired because I slept late last night.",
+                            "She will go, and if it rains heavily.",
+                            "Although he was sick but he still went to work.",
+                            "Neither she nor her friend are coming."
+                        ],
+                        correctAnswer: 3,
+                        explanation: "The fourth option demonstrates correct use of correlative conjunctions 'neither' and 'nor.'",
+                        difficulty: 1
+                    },
+                    {
+                        question: "Which sentence demonstrates proper use of the future perfect tense?",
+                        options: [
+                            "I will have finished the project by next week.",
+                            "She will finishes her homework before dinner.",
+                            "They will have been arriving late to the party.",
+                            "We will been complete the task by tomorrow."
+                        ],
+                        correctAnswer: 0,
+                        explanation: "The first option correctly uses the future perfect tense to indicate completion of an action by a specific time in the future.",
+                        difficulty: 1
+                    },
+                    {
+                        question: "Which sentence demonstrates the correct use of an indirect question?",
+                        options: [
+                            "Do you know where is she?",
+                            "Can you tell me what time the train leaves?",
+                            "Could you explain where did he go?",
+                            "Do you know what is the answer to this question?"
+                        ],
+                        correctAnswer: 1,
+                        explanation: "The second option correctly uses an indirect question structure with appropriate word order.",
+                        difficulty: 1
+                    },
+
+                    // New Questions
+                    {
+                        question: "Which sentence demonstrates the most precise use of the subjunctive mood?",
+                        options: [
+                            "I suggest that he is careful.",
+                            "I suggest that he be careful.",
+                            "I suggest him to be careful.",
+                            "I suggested that he was careful."
+                        ],
+                        correctAnswer: 1,
+                        explanation: "The second option correctly uses the subjunctive mood to express a recommendation.",
+                        difficulty: 3
+                    },
+                    {
+                        question: "Identify the sentence with the most grammatically correct parallel structure:",
+                        options: [
+                            "She likes swimming, to read, and hiking.",
+                            "She likes to swim, reading, and hike.",
+                            "She likes swimming, reading, and to hike.",
+                            "She likes to swim, to read, and to hike."
+                        ],
+                        correctAnswer: 3,
+                        explanation: "The third option maintains consistent grammatical form in the list.",
+                        difficulty: 2
+                    },
+                    {
+                        question: "Which sentence uses the perfect infinitive most accurately?",
+                        options: [
+                            "He seems to have studied.",
+                            "He seems to have study.",
+                            "He seems to have studying.",
+                            "He seems have studied."
+                        ],
+                        correctAnswer: 0,
+                        explanation: "The first option correctly uses the perfect infinitive to indicate a completed action.",
+                        difficulty: 3
+                    },
+                    {
+                        question: "Select the sentence with the most sophisticated use of the passive voice:",
+                        options: [
+                            "The book was read by her.",
+                            "Her the book was read.",
+                            "The book read by her.",
+                            "By her the book was read."
+                        ],
+                        correctAnswer: 0,
+                        explanation: "The first option correctly uses the passive voice with proper sentence structure.",
+                        difficulty: 2
+                    },
+                    {
+                        question: "Identify the sentence with the most precise use of the future perfect continuous tense:",
+                        options: [
+                            "By next year, I will have been working here for five years.",
+                            "By next year, I will be working here for five years.",
+                            "By next year, I will have working here for five years.",
+                            "By next year, I will work here for five years."
+                        ],
+                        correctAnswer: 0,
+                        explanation: "The first option correctly uses the future perfect continuous tense.",
+                        difficulty: 3
+                    },
+                    {
+                        question: "Choose the sentence with the most appropriate mixed conditional structure:",
+                        options: [
+                            "If I would have known, I would come.",
+                            "If I had known, I would have come.",
+                            "If I know, I would come.",
+                            "If I knew, I come."
+                        ],
+                        correctAnswer: 1,
+                        explanation: "The second option correctly uses a mixed conditional structure.",
+                        difficulty: 3
+                    },
+                    {
+                        question: "Which sentence demonstrates the most precise use of the modal perfect?",
+                        options: [
+                            "She must have gone to the store.",
+                            "She must go to the store.",
+                            "She must be going to the store.",
+                            "She must of gone to the store."
+                        ],
+                        correctAnswer: 0,
+                        explanation: "The first option correctly uses the modal perfect to express a past probability.",
+                        difficulty: 2
+                    },
+                    {
+                        question: "Select the sentence with the most sophisticated cleft construction:",
+                        options: [
+                            "It was him who solved the problem.",
+                            "It was he who solved the problem.",
+                            "He was who solved the problem.",
+                            "It is him who solving the problem."
+                        ],
+                        correctAnswer: 1,
+                        explanation: "The second option uses the correct pronoun and cleft structure.",
+                        difficulty: 3
+                    },
+                    {
+                        question: "Identify the sentence with the most precise inversion in a complex conditional:",
+                        options: [
+                            "Had I known the truth, I would have acted differently.",
+                            "If I had known the truth, I would have acted differently.",
+                            "Known I the truth, I would have acted differently.",
+                            "I had known the truth, I would have acted differently."
+                        ],
+                        correctAnswer: 0,
+                        explanation: "The first option uses perfect inversion in a hypothetical condition.",
+                        difficulty: 3
+                    },
+                    {
+                        question: "Choose the sentence with the most appropriate use of the causative have:",
+                        options: [
+                            "I had my car to be repaired.",
+                            "I have my car repaired.",
+                            "I had my car be repaired.",
+                            "I have my car to repair."
+                        ],
+                        correctAnswer: 1,
+                        explanation: "The second option correctly uses the causative have structure.",
+                        difficulty: 2
+                    },
+                    {
+                        question: "Which sentence demonstrates the most precise use of reduced relative clauses?",
+                        options: [
+                            "The man sitting in the corner is my uncle.",
+                            "The man who is sitting in the corner is my uncle.",
+                            "The man he is sitting in the corner is my uncle.",
+                            "The man to sit in the corner is my uncle."
+                        ],
+                        correctAnswer: 0,
+                        explanation: "The first option correctly uses a reduced relative clause.",
+                        difficulty: 2
+                    },
+                    {
+                        question: "Identify the sentence with the most sophisticated use of the present perfect subjunctive:",
+                        options: [
+                            "I wish he would have studied.",
+                            "I wish he had studied.",
+                            "I wish he will have studied.",
+                            "I wish he has studied."
+                        ],
+                        correctAnswer: 1,
+                        explanation: "The second option correctly uses the past perfect for hypothetical situations.",
+                        difficulty: 3
+                    },
+                    {
+                        question: "Select the sentence with the most precise gerund usage:",
+                        options: [
+                            "I appreciate you to help me.",
+                            "I appreciate you helping me.",
+                            "I appreciate you help me.",
+                            "I appreciate you helped me."
+                        ],
+                        correctAnswer: 1,
+                        explanation: "The second option correctly uses a gerund after 'appreciate'.",
+                        difficulty: 2
+                    },
+                    {
+                        question: "Choose the sentence with the most grammatically sophisticated use of ellipsis:",
+                        options: [
+                            "She speaks French better than I do.",
+                            "She speaks French better than me.",
+                            "She speaks French better than I.",
+                            "She speaks French better than myself."
+                        ],
+                        correctAnswer: 0,
+                        explanation: "The first option correctly uses elliptical comparison with the full verb.",
+                        difficulty: 3
+                    },
+                    {
+                        question: "Identify the sentence with the most precise use of the third conditional:",
+                        options: [
+                            "If I would have known, I had come.",
+                            "If I had known, I would have come.",
+                            "If I know, I would come.",
+                            "If I knew, I come."
+                        ],
+                        correctAnswer: 1,
+                        explanation: "The second option correctly uses the third conditional structure.",
+                        difficulty: 3
+                    },
+                    {
+                        question: "Which sentence demonstrates the most sophisticated use of a participle phrase:",
+                        options: [
+                            "Walking into the room, the light was turned on.",
+                            "Walking into the room, I turned on the light.",
+                            "I walking into the room, the light was turned on.",
+                            "Walking the room, I turned on the light."
+                        ],
+                        correctAnswer: 1,
+                        explanation: "The second option correctly uses a participial phrase with the appropriate subject.",
+                        difficulty: 2
+                    },
+                    {
+                        question: "Select the sentence with the most appropriate use of the dummy subject:",
+                        options: [
+                            "It seems that he is coming.",
+                            "Seems that he is coming.",
+                            "He seems coming.",
+                            "He is seems to coming."
+                        ],
+                        correctAnswer: 0,
+                        explanation: "The first option correctly uses the dummy subject 'it'.",
+                        difficulty: 1
+                    },
+                    {
+                        question: "Choose the sentence with the most precise use of inversed question formation:",
+                        options: [
+                            "Never have I seen such a beautiful sunset.",
+                            "Never I have seen such a beautiful sunset.",
+                            "I have never seen such a beautiful sunset.",
+                            "Have never I seen such a beautiful sunset."
+                        ],
+                        correctAnswer: 0,
+                        explanation: "The first option uses correct inversion for an emphatic negative statement.",
+                        difficulty: 3
+                    },
+                    {
+                        question: "Identify the sentence with the most sophisticated use of a non-defining relative clause:",
+                        options: [
+                            "My brother, who is a doctor, lives in New York.",
+                            "My brother who is a doctor lives in New York.",
+                            "My brother, that is a doctor, lives in New York.",
+                            "My brother which is a doctor, lives in New York."
+                        ],
+                        correctAnswer: 0,
+                        explanation: "The first option correctly uses commas with a non-defining relative clause.",
+                        difficulty: 2
+                    },
+                    {
+                        question: "Which sentence demonstrates the most precise use of the past modal of speculation:",
+                        options: [
+                            "He must have been working late.",
+                            "He must be working late.",
+                            "He must of been working late.",
+                            "He must working late."
+                        ],
+                        correctAnswer: 0,
+                        explanation: "The first option correctly uses the past modal to speculate about a past action.",
+                        difficulty: 2
+                    },
+                    {
+                        question: "Select the sentence with the most grammatically sophisticated parallel comparison:",
+                        options: [
+                            "She is as intelligent as, if not more intelligent than, her brother.",
+                            "She is as intelligent as her brother, if not more.",
+                            "She is intelligent as her brother, if not more.",
+                            "She is as intelligent than her brother."
+                        ],
+                        correctAnswer: 0,
+                        explanation: "The first option uses a sophisticated parallel comparison structure.",
+                        difficulty: 3
+                    },
+                    {
+                        question: "Choose the sentence with the most precise use of the mixed metaphor:",
+                        options: [
+                            "He is sailing through the stormy waters of his career.",
+                            "He is walking through the stormy waters of his career.",
+                            "He is flying through the stormy waters of his career.",
+                            "He is swimming through the stormy waters of his career."
+                        ],
+                        correctAnswer: 0,
+                        explanation: "The first option uses a consistent nautical metaphor.",
+                        difficulty: 2
+                    },
+                    {
+                        question: "Identify the sentence with the most sophisticated use of the anticipatory 'it':",
+                        options: [
+                            "It is important that he comes to the meeting.",
+                            "It is important he comes to the meeting.",
+                            "Is important that he comes to the meeting.",
+                            "It important that he comes to the meeting."
+                        ],
+                        correctAnswer: 0,
+                        explanation: "The first option correctly uses the anticipatory 'it' construction.",
+                        difficulty: 2
+                    },
+                ];
+            }
+
+            getFilteredQuestions() {
+                return this.questions.filter(q =>
+                    q.difficulty <= this.currentDifficultyIndex + 1
+                );
+            }
+
+            getCurrentQuestion() {
+                const filteredQuestions = this.getFilteredQuestions();
+                return filteredQuestions[this.currentQuestionIndex % filteredQuestions.length];
+            }
+
+            checkAnswer(selectedIndex) {
+                const currentQuestion = this.getCurrentQuestion();
+                const isCorrect = selectedIndex === currentQuestion.correctAnswer;
+
+                if (isCorrect) {
+                    this.consecutiveCorrectAnswers++;
+                    this.score += 10;
+
+                    if (this.consecutiveCorrectAnswers === 2 &&
+                        this.currentDifficultyIndex < this.difficultyLevels.length - 1) {
+                        this.currentDifficultyIndex++;
+                        this.consecutiveCorrectAnswers = 0;
+                    }
+                } else {
+                    this.consecutiveCorrectAnswers = 0;
+
+                    if (this.currentDifficultyIndex > 0) {
+                        this.currentDifficultyIndex--;
+                    }
+                }
+
+                return {
+                    isCorrect,
+                    explanation: currentQuestion.explanation
+                };
+            }
+
+            nextQuestion() {
+                this.currentQuestionIndex++;
+            }
+        }
+
+        class QuizUI {
+            constructor(quizGenerator) {
+                this.quizGenerator = quizGenerator;
+                this.questionContainer = document.getElementById('question-container');
+                this.scoreElement = document.getElementById('current-score');
+                this.difficultyElement = document.getElementById('current-difficulty');
+                this.startBtn = document.getElementById('start-btn');
+                this.nextBtn = document.getElementById('next-btn');
+                this.restartBtn = document.getElementById('restart-btn');
+                this.maxQuestions = 10;
+                this.setupEventListeners();
+            }
+
+            setupEventListeners() {
+                this.startBtn.addEventListener('click', () => this.startQuiz());
+                this.nextBtn.addEventListener('click', () => this.displayNextQuestion());
+                this.restartBtn.addEventListener('click', () => this.restartQuiz());
+            }
+
+            startQuiz() {
+                this.startBtn.style.display = 'none';
+                this.nextBtn.style.display = 'inline-block';
+                this.displayQuestion();
+            }
+
+            displayQuestion() {
+                if (this.quizGenerator.currentQuestionIndex >= this.maxQuestions) {
+                    this.endQuiz();
+                    return;
+                }
+
+                const question = this.quizGenerator.getCurrentQuestion();
+                this.questionContainer.innerHTML = `
+                    <div class="question">
+                        <h3>${question.question}</h3>
+                        ${question.options.map((option, index) => `
+                            <div class="option" data-index="${index}">${option}</div>
+                        `).join('')}
+                    </div>
+                `;
+
+                document.querySelectorAll('.option').forEach(option => {
+                    option.addEventListener('click', (e) => this.handleOptionClick(e));
+                });
+
+                this.difficultyElement.textContent =
+                    this.quizGenerator.difficultyLevels[this.quizGenerator.currentDifficultyIndex];
+            }
+
+            handleOptionClick(e) {
+                const selectedIndex = parseInt(e.target.getAttribute('data-index'));
+                const result = this.quizGenerator.checkAnswer(selectedIndex);
+
+                document.querySelectorAll('.option').forEach((option, index) => {
+                    option.classList.remove('correct', 'incorrect');
+                    if (index === this.quizGenerator.getCurrentQuestion().correctAnswer) {
+                        option.classList.add('correct');
+                    }
+                    if (index === selectedIndex && !result.isCorrect) {
+                        option.classList.add('incorrect');
+                    }
+                });
+
+                document.querySelectorAll('.option').forEach(option => {
+                    option.style.pointerEvents = 'none';
+                });
+
+                this.scoreElement.textContent = this.quizGenerator.score;
+
+                this.questionContainer.innerHTML += `
+                    <div style="margin-top: 15px; color: ${result.isCorrect ? 'green' : 'red'}">
+                        ${result.explanation}
+                    </div>
+                `;
+            }
+
+            displayNextQuestion() {
+                this.quizGenerator.nextQuestion();
+                this.displayQuestion();
+            }
+
+            endQuiz() {
+                this.questionContainer.innerHTML = `
+                    <h2>Quiz Complete!</h2>
+                    <p>Your final score is: ${this.quizGenerator.score}</p>
+                `;
+                this.nextBtn.style.display = 'none';
+                this.restartBtn.style.display = 'inline-block';
+            }
+
+            restartQuiz() {
+                this.quizGenerator.currentQuestionIndex = 0;
+                this.quizGenerator.score = 0;
+                this.quizGenerator.currentDifficultyIndex = 0;
+                this.quizGenerator.consecutiveCorrectAnswers = 0;
+
+                this.scoreElement.textContent = 0;
+                this.startBtn.style.display = 'inline-block';
+                this.restartBtn.style.display = 'none';
+                this.questionContainer.innerHTML = '';
+                this.difficultyElement.textContent = 'Easy';
+            }
+        }
+
+        const quizGenerator = new LanguageQuizGenerator();
+        const quizUI = new QuizUI(quizGenerator);
+    </script>
+</body>
+
+</html>

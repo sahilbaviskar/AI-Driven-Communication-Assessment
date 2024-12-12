@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Speech Analysis</title>
+    <style>
+        :root {
+            --gradient-1: #4158D0;
+            --gradient-2: #C850C0;
+            --gradient-3: #FFCC70;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --shadow: rgba(31, 38, 135, 0.15);
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(45deg, var(--gradient-1), var(--gradient-2), var(--gradient-3));
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px var(--shadow);
+            backdrop-filter: blur(10px);
+        }
+
+        .title {
+            text-align: center;
+            color: #2d3436;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+        }
+
+        .video-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        #videoPreview {
+            width: 100%;
+            max-width: 640px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            background: #000;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: white;
+            background-size: 200% auto;
+        }
+
+        .btn-primary {
+            background-image: linear-gradient(45deg, #4158D0, #C850C0);
+        }
+
+        .btn-record {
+            background-image: linear-gradient(45deg, #FF416C, #FF4B2B);
+        }
+
+        .btn:hover {
+            background-position: right center;
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .analysis-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .analysis-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .recording-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(45deg, #FF416C, #FF4B2B);
+            color: white;
+            border-radius: 25px;
+            display: none;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Speech Analysis & Improvement</h1>
+        
+        <div class="video-section">
+            <video id="videoPreview" autoplay muted></video>
+            <div class="controls">
+                <button class="btn btn-primary" id="startCamera">Start Camera</button>
+                <button class="btn btn-record" id="startRecording" disabled>Record</button>
+                <button class="btn btn-primary" id="stopRecording" disabled>Stop</button>
+            </div>
+        </div>
+
+        <div class="analysis-grid">
+            <div class="analysis-card">
+                <h2>Strengths</h2>
+                <ul id="strengthsList"></ul>
+            </div>
+            <div class="analysis-card">
+                <h2>Weaknesses</h2>
+                <ul id="weaknessesList"></ul>
+            </div>
+            <div class="analysis-card">
+                <h2>Opportunities</h2>
+                <ul id="opportunitiesList"></ul>
+            </div>
+            <div class="analysis-card">
+                <h2>Threats</h2>
+                <ul id="threatsList"></ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="recording-indicator">Recording...</div>
+
+    <script>
+        const videoPreview = document.getElementById('videoPreview');
+        const startCameraBtn = document.getElementById('startCamera');
+        const startRecordingBtn = document.getElementById('startRecording');
+        const stopRecordingBtn = document.getElementById('stopRecording');
+        const recordingIndicator = document.querySelector('.recording-indicator');
+        
+        let mediaRecorder;
+        let recordedChunks = [];
+
+        function generateAnalysis() {
+            const analysis = {
+                strengths: ['Confident voice projection', 'Maintained eye contact', 'Clear articulation'],
+                weaknesses: ['Occasional filler words', 'Speaking pace variations', 'Limited gestures'],
+                opportunities: ['Advanced presentation techniques', 'Voice modulation practice', 'Body language enhancement'],
+                threats: ['Public speaking anxiety', 'Time management', 'Technical issues']
+            };
+
+            Object.keys(analysis).forEach(key => {
+                const list = document.getElementById(`${key}List`);
+                list.innerHTML = analysis[key].map(item => `<li>${item}</li>`).join('');
+            });
+        }
+
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: true
+                });
+                videoPreview.srcObject = stream;
+                startRecordingBtn.disabled = false;
+                startCameraBtn.disabled = true;
+                
+                mediaRecorder = new MediaRecorder(stream);
+                
+                mediaRecorder.ondataavailable = (event) => {
+                    if (event.data.size > 0) {
+                        recordedChunks.push(event.data);
+                    }
+                };
+
+                mediaRecorder.onstop = () => {
+                    generateAnalysis();
+                    recordingIndicator.style.display = 'none';
+                };
+
+            } catch (error) {
+                console.error('Camera access error:', error);
+                alert('Unable to access camera. Please check permissions.');
+            }
+        }
+
+        startCameraBtn.addEventListener('click', startCamera);
+        
+        startRecordingBtn.addEventListener('click', () => {
+            mediaRecorder.start();
+            startRecordingBtn.disabled = true;
+            stopRecordingBtn.disabled = false;
+            recordingIndicator.style.display = 'block';
+        });
+
+        stopRecordingBtn.addEventListener('click', () => {
+            mediaRecorder.stop();
+            startRecordingBtn.disabled = false;
+            stopRecordingBtn.disabled = true;
+        });
+    </script>
+</body>
+</html>

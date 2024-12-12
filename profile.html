@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="profile.css">
+</head>
+
+<body>
+    <div id="profile-page">
+        <!-- Left Panel: Profile Section -->
+        <div class="profile-panel">
+            <div class="profile-header">
+                <!-- <img id="profile-photo" src="profilephoto.png" alt="Profile Photo" class="profile-photo"> -->
+                <h2 id="profile-name">Sahil</h2>
+                <p id="profile-age">Age: 20</p>
+                <p id="profile-sex">Sex: Male</p>
+                <p id="profile-designation">Designation: Software Engineer</p>
+
+                <!-- Button to Edit Profile -->
+                <button class="edit-profile-btn" onclick="editProfile()">Edit Profile</button>
+                <br>
+                <br>
+                <!-- Logout Button -->
+                <button class="logout-btn" onclick="logout()">Logout</button>
+
+                <!-- Edit Profile Modal -->
+                <div id="edit-profile-modal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-btn" onclick="closeModal()">&times;</span>
+                        <h3>Edit Profile</h3>
+                        <!-- <label for="new-photo">Profile Photo URL:</label>
+                        <input type="text" id="new-photo" placeholder="Enter photo URL"> -->
+                        <label for="new-name">Name:</label>
+                        <input type="text" id="new-name" placeholder="Enter your name">
+                        <label for="new-age">Age:</label>
+                        <input type="number" id="new-age" placeholder="Enter your age">
+                        <label for="new-sex">Sex:</label>
+                        <select id="new-sex">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <label for="new-designation">Designation:</label>
+                        <input type="text" id="new-designation" placeholder="Enter your designation">
+                        <button onclick="saveProfile()">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel: Communication Options Section -->
+        <div class="options-container">
+            <div class="option-card" onclick="redirectTOGrammar()">
+                <div class="icon-container">📚</div>
+                <h3>Grammar</h3>
+            </div>
+            <div class="option-card" onclick="redirectTOSpeechAna()">
+                <div class="icon-container">🗣️</div>
+                <h3>Pronounciation</h3>
+            </div>
+
+            <div class="option-card" id="spell-checker-button">
+                <div class="icon-container">✍</div>
+                <h3>Spell Checker</h3>
+            </div>
+
+            <div class="option-card" id="Interview-page-button">
+                <div class="icon-container">
+                    <img src="https://cdn0.iconfinder.com/data/icons/job-seeker/256/interview_job_seeker_employee_unemployee_work-64.png"
+                        alt="Grammar Icon" class="icon-image">
+                </div>
+                <h3>Interview</h3>
+            </div>
+            <div class="option-card" onclick="redirectToBLA()">
+                <div class="icon-container">
+                    <img src="https://cdn-icons-png.freepik.com/256/10216/10216065.png?ga=GA1.1.1003987349.1707927814&semt=ais_hybrid"
+                        alt="BLA" class="icon-image">
+                </div>
+                <h3>Body Language Analyzer</h3>
+            </div>
+            <div class="option-card" onclick="redirectToQuiz()">
+                <div class="icon-container">
+                    <img src="https://cdn0.iconfinder.com/data/icons/hr-outline-pack/100/HR_iconpack-11-64.png"
+                        alt="MCQ Icon" class="icon-image">
+                </div>
+                <h3>Rapid-Fire</h3>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

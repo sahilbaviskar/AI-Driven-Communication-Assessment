@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grammar</title>
+    <link rel="stylesheet" href="./grammar.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Grammar Checker</h1>
+        <textarea id="inputText" placeholder="Type or paste your text here..." rows="6"></textarea>
+        <button onclick="checkGrammarHandler()">Check Grammar</button>
+
+        <div id="result" class="result">
+            <h3>Corrected Text:</h3>
+            <p id="correctedText"></p>
+            <h3>Feedback:</h3>
+            <p id="feedback"></p>
+            <h3>Score:</h3>
+            <p id="score"></p>
+        </div>
+    </div>
+    <script src="./grammar.js"></script>
+</body>
+
+</html>

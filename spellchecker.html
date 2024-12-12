@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Practice Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #54335184;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: #e39a9a;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 300px;
+        }
+
+        h1 {
+            font-size: 1.5em;
+            color: #333;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            margin: 10px 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+
+        .result {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .success {
+            color: green;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .slider-container {
+            margin: 20px 0;
+        }
+
+        .slider-label {
+            font-size: 0.9em;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        .slider {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Word Practice Tool</h1>
+        <label for="difficulty">Select Difficulty:</label>
+        <select id="difficulty">
+            <option value="simple">Simple</option>
+            <option value="medium">Medium</option>
+            <option value="advanced">Advanced</option>
+        </select>
+        <button onclick="speakWord()">Speak Word</button>
+        <button onclick="repeatWord()" id="repeatButton" disabled>Repeat Word</button>
+        <div class="slider-container">
+            <label for="speedSlider" class="slider-label">Speech Speed: <span id="speedValue">1.0x</span></label>
+            <input type="range" id="speedSlider" class="slider" min="0.5" max="2" step="0.1" value="1">
+        </div>
+        <input type="text" id="userInput" placeholder="Type the word here">
+        <button onclick="checkSpelling()">Check Spelling</button>
+        <p class="result" id="result"></p>
+    </div>
+
+    <script>
+        let currentWord = "";
+        let speechRate = 1.0; // Default speech rate
+
+        // Word lists for each difficulty level
+        const simpleWords = [
+            "cat", "dog", "ball", "tree", "milk", "house", "book", "car", "pen", "apple", "banana", "egg", "fish", "table", "chair",
+            "shirt", "cup", "bird", "hat", "glove", "towel", "key", "window", "door", "bat", "grass", "mountain", "lake", "cloud", "star",
+            "moon", "sun", "earth", "sand", "rock", "breeze", "wind", "rain", "snow", "mountain", "ocean", "beach", "sea", "flower", "rose",
+            "tulip", "daisy", "tree", "forest", "desert", "snowflake", "snowman", "carrot", "pumpkin", "apple", "pear", "orange", "grape",
+            "cherry", "watermelon", "pineapple", "mango", "kiwi", "lemon", "peach", "plum", "cucumber", "carrot", "onion", "tomato", "spinach",
+            "lettuce", "avocado", "coconut", "nuts", "rice", "bread", "pasta", "potato", "cheese", "yogurt", "butter", "jam", "honey", "salt",
+            "sugar", "coffee", "tea", "milk", "juice", "cocoa", "beer", "wine", "whiskey", "vodka", "rum", "apple", "banana", "pear", "grape",
+            "kiwi", "lemon", "lime", "melon", "pumpkin", "fig", "papaya", "peach", "plum", "pomegranate", "apricot", "blueberry", "blackberry",
+            "strawberry", "cranberry", "squash", "carrot", "cabbage", "broccoli", "cauliflower", "zucchini", "eggplant", "spinach", "lettuce",
+            "arugula", "parsley", "cucumber", "ginger", "garlic", "onion", "leek", "shallot", "chili", "pepper", "celery", "oregano", "basil",
+            "thyme", "sage", "rosemary", "chocolate", "ice", "cake", "pie", "donut", "cookies", "muffin", "pudding", "cake", "tart", "candy",
+            "gum", "chocolate", "bar", "pastry", "cupcake", "waffle", "popcorn", "pretzel", "fries", "hamburger", "hotdog", "pizza", "sushi",
+            "taco", "pasta", "salad", "sandwich", "soup", "burger", "steak", "chicken", "turkey", "fish", "shrimps", "lobster", "crab", "bacon",
+            "sausage", "beef", "pork", "mutton", "lamb", "goat", "rabbit", "duck", "turkey", "egg", "cheese", "milk", "yogurt", "butter", "cream",
+            "chicken", "chili", "curry", "ketchup", "mustard", "mayo", "sauce", "hummus", "salsa", "tahini", "pesto", "balsamic", "vinegar", "oil",
+            "salt", "pepper", "sugar", "flour", "corn", "rice", "wheat", "barley", "oats", "pasta", "noodles", "bread", "biscuits", "scones", "cake",
+            "cookies", "crackers", "chips", "pretzels", "popcorn", "nuts", "seeds", "almond", "walnut", "hazelnut", "cashew", "peanut", "pistachio"
+        ];
+        const mediumWords = [
+            "orange", "mountain", "pencil", "window", "garden", "bottle", "engine", "furniture", "music", "memory", "oxygen", "circle",
+            "square", "triangle", "rectangle", "diamond", "octagon", "pyramid", "cylinder", "sphere", "cube", "light", "shadow", "laser",
+            "camera", "cellphone", "microphone", "speaker", "television", "computer", "keyboard", "mouse", "monitor", "printer", "camera",
+            "keyboard", "website", "program", "algorithm", "software", "hardware", "database", "server", "network", "protocol", "connection",
+            "signal", "electronic", "power", "circuit", "voltage", "current", "battery", "charge", "magnet", "antenna", "lightning", "volt",
+            "ampere", "ohm", "temperature", "pressure", "speed", "acceleration", "distance", "force", "motion", "velocity", "momentum", "mass",
+            "weight", "energy", "power", "work", "torque", "gravity", "inertia", "friction", "magnetism", "sound", "vibration", "reflection",
+            "refraction", "lens", "mirror", "wave", "frequency", "period", "amplitude", "oscillation", "tension", "entropy", "chaos", "quantum",
+            "physics", "biology", "chemistry", "psychology", "sociology", "anthropology", "history", "geography", "economics", "politics", "philosophy",
+            "literature", "mathematics", "statistics", "economics", "finance", "investments", "stocks", "bonds", "currency", "trade", "market",
+            "bank", "credit", "debt", "interest", "inflation", "tax", "economy", "growth", "capital", "job", "employment", "unemployment",
+            "workplace", "company", "business", "management", "finance", "consulting", "marketing", "advertisement", "strategy", "team", "leader",
+            "employee", "manager", "director", "supervisor", "engineer", "technician", "doctor", "nurse", "lawyer", "teacher", "scientist",
+            "technologist", "accountant", "analyst", "researcher", "author", "journalist", "editor", "artist", "musician", "dancer", "actor",
+            "athlete", "coach", "trainer", "entrepreneur", "investor", "financier", "designer", "developer", "coder", "architect", "plumber",
+            "electrician", "driver", "farmer", "chef", "baker", "barista", "cleaner", "builder", "contractor", "firefighter", "police", "paramedic",
+            "receptionist", "waiter", "host", "guard", "counselor", "therapist", "manager", "director", "supervisor", "officer", "scientist"
+        ];
+        const advancedWords = [
+            "university", "philosophy", "perpendicular", "determination", "hypothesis", "constitution", "mathematics", "calculus", "trigonometry", "algebra",
+            "geometry", "differential", "equation", "graph", "statistical", "probability", "logarithm", "integral", "function", "sequence",
+            "ratio", "matrix", "algorithm", "computation", "optimization", "theorem", "proof", "derivative", "expansion", "algorithmic",
+            "computational", "cryptography", "biochemistry", "cytology", "neurology", "genetics", "immunology", "epidemiology", "molecular", "microscope",
+            "astronomy", "theory", "cosmology", "telescope", "planets", "gravity", "universe", "quantum", "relativity", "radioactive", "element",
+            "nucleus", "periodic", "atomic", "subatomic", "particles", "isotope", "molecule", "neuron", "synapse", "nervous", "brain", "photon",
+            "chemistry", "psychology", "sociology", "economics", "anthropology", "politics", "theocracy", "democracy", "autocracy", "socialism",
+            "capitalism", "socialist", "communist", "revolutionary", "civilization", "independence", "sovereignty", "humanitarian", "volunteer",
+            "geopolitics", "globalization", "multinational", "corporation", "consumerism", "technological", "innovation", "entrepreneurship",
+            "start-up", "investment", "finance", "economist", "accounting", "audit", "ledger", "bankruptcy", "solvency", "liquidity", "revenue",
+            "income", "expenses", "debt", "equity", "risk", "portfolio", "stock", "bonds", "bonds", "currency", "forex", "futures", "options",
+            "taxation", "subsidy", "incentive", "econometrics", "sustainability", "ecology", "ecosystem", "carbon", "greenhouse", "climate", "pollution",
+            "agriculture", "biology", "genetics", "microscope", "biotechnology", "anatomy", "zoology", "ecology", "botany", "genomics", "genetics",
+            "computational", "machine", "computer", "artificial", "intelligence", "neural", "network", "big", "data", "cloud", "internet", "robotics",
+            "automation", "engineering", "mechanical", "electrical", "aerospace", "chemical", "biomedical", "environmental", "nuclear", "material",
+            "chemical", "textile", "industrial", "cyber", "security", "networking", "cryptography", "cryptocurrency", "blockchain", "internet",
+            "software", "cloud", "database", "architecture", "agile", "scrum", "project", "management", "consulting", "systems", "integration"
+        ];
+
+        // Function to get a word based on the selected difficulty level
+        function getWord() {
+            const difficulty = document.getElementById("difficulty").value;
+            let words = [];
+
+            // Use the appropriate word list based on the selected difficulty
+            if (difficulty === "simple") {
+                words = simpleWords;
+            } else if (difficulty === "medium") {
+                words = mediumWords;
+            } else if (difficulty === "advanced") {
+                words = advancedWords;
+            }
+
+            // Return a random word from the selected difficulty level
+            return words[Math.floor(Math.random() * words.length)];
+        }
+
+        // Function to speak a word
+        function speakWord() {
+            currentWord = getWord(); // Get a word based on the selected difficulty
+            const utterance = new SpeechSynthesisUtterance(currentWord);
+            utterance.rate = speechRate; // Apply the speech rate
+            utterance.lang = "en-US";
+            speechSynthesis.speak(utterance);
+
+            // Enable repeat button after the word is spoken
+            document.getElementById("repeatButton").disabled = false;
+
+            // Clear previous input and result
+            document.getElementById("userInput").value = "";
+            document.getElementById("result").textContent = "";
+        }
+
+        // Function to repeat the current word's pronunciation
+        function repeatWord() {
+            if (!currentWord) return; // Do nothing if no word is set
+            const utterance = new SpeechSynthesisUtterance(currentWord);
+            utterance.rate = speechRate; // Apply the speech rate
+            utterance.lang = "en-US";
+            speechSynthesis.speak(utterance);
+        }
+
+        // Function to check spelling
+        function checkSpelling() {
+            const userInput = document.getElementById("userInput").value.trim();
+            const result = document.getElementById("result");
+
+            if (userInput.toLowerCase() === currentWord.toLowerCase()) {
+                result.textContent = "Correct!";
+                result.className = "result success";
+            } else {
+                result.textContent = `Incorrect! The correct word was "${currentWord}".`;
+                result.className = "result error";
+            }
+        }
+
+        // Update speech rate based on slider value
+        const speedSlider = document.getElementById("speedSlider");
+        const speedValue = document.getElementById("speedValue");
+        speedSlider.addEventListener("input", function () {
+            speechRate = parseFloat(this.value);
+            speedValue.textContent = `${speechRate.toFixed(1)}x`;
+        });
+    </script>
+</body>
+
+</html>

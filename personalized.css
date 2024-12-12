@@ -1,0 +1,132 @@
+/* style.css */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #f4f4f9;
+  }
+  
+  .container {
+    display: flex;
+    flex-direction: column;
+    width: 95%;
+    max-height: 95vh;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  header {
+    background: #007bff;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+  }
+  
+  main {
+    display: flex;
+    height: 100%;
+  }
+  
+  .left-section {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+  }
+  
+  #text-section {
+    margin-bottom: 20px;
+  }
+  
+  #text-section h3 {
+    margin: 0 0 10px;
+  }
+  
+  #reading-text {
+    padding: 10px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    height: 100px;
+    overflow-y: auto;
+  }
+  
+  #generateTextBtn {
+    margin-top: 10px;
+    padding: 10px 15px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  #generateTextBtn:hover {
+    background: #0056b3;
+  }
+  
+  #video-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  video {
+    width: 100%;
+    max-height: 200px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+  
+  .controls {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .controls button {
+    padding: 10px 15px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .controls button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .right-section {
+    flex: 1;
+    background: #f9f9f9;
+    padding: 20px;
+    border-left: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .right-section h3 {
+    margin-bottom: 15px;
+  }
+  
+  .right-section p {
+    margin: 10px 0;
+  }
+  
+  .right-section span {
+    font-weight: bold;
+  }
+  
